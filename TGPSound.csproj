@@ -14,13 +14,4 @@
     <PackageReference Include="Spectre.Console" Version="0.55.0" />
     <PackageReference Include="Spectre.Console.ImageSharp" Version="0.55.0" />   
   </ItemGroup>
-
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\mathe\Documents\Programação\TGPSound\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\mathe\Documents\Programação\TGPSound\.editorconfig" />
-  </ItemGroup>
-
 </Project>
