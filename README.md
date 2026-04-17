@@ -1,30 +1,45 @@
-# 🎧 TGPSound
+<h1 align="center">🎶 TGPSound</h1>
+<p align="center">A lightweight YouTube console client built with C# and .NET</i>
 
-> A lightweight YouTube console client built with C# and .NET
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-8.0-blueviolet?style=for-the-badge&logo=dotnet&logoColor=white" />
+  <img src="https://img.shields.io/badge/C%23-Programming-239120?style=for-the-badge&logo=c-sharp&logoColor=white" />
+  <img src="https://img.shields.io/badge/App-Console-black?style=for-the-badge&logo=windows-terminal&logoColor=white" />
+  <img src="https://img.shields.io/badge/Spectre.Console-UI-ff69b4?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/HTTP-Requests-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/JSON-Parsing-yellow?style=for-the-badge&logo=json&logoColor=black" />
+  <img src="https://img.shields.io/badge/YouTube-Client-red?style=for-the-badge&logo=youtube&logoColor=white" />
+</p>
 
----
+<p align="center">
+	<img src="examples/player-image.jpeg" width="45%" />
+</p>
+
+<p align="center">
+	<i>Audio player screen with thumbnail and progress bar</i>
+</p>
 
 ## 🚀 About
 
-TGPSound is a console-based YouTube client that allows you to search, extract and play audio streams directly from the terminal.
+TGPSound is a console-based YouTube client that allows you to search, extract and play audio streams directly from the terminal,
+without the need for a web browser. It leverages reverse engineering techniques to interact with YouTube's internal APIs, providing a fast and efficient way to access audio content.
 
 This project was built for learning purposes, focusing on:
 - Reverse engineering
 - HTTP requests and API behavior
 - Stream extraction
 - Clean and efficient console architecture
-
----
+- Audio playback integration
+- Advanced console UI with Spectre.Console
+- Handling YouTube's dynamic content and anti-scraping measures
 
 ## ✨ Features
 
-- 🔍 Search videos
-- 🎵 Extract audio streams
+- 🔍 Search musics
+- 🎵 Extract better audio streams
 - ⚡ Fast and lightweight
 - 🧠 Reverse engineered endpoints
 - 💻 Fully console-based
-
----
 
 ## 🧠 Tech Stack
 
@@ -33,7 +48,34 @@ This project was built for learning purposes, focusing on:
 - JSON Parsing
 - Reverse Engineering techniques
 
----
+## 🚀 Goals
+
+- [x] Audio search system
+- [x] Audio stream extraction
+- [x] HTTP requests with custom headers
+- [x] Reverse engineered endpoints (Thanks YouTubeExplode)
+- [x] Console-based interface
+- [x] Fast and lightweight architecture
+- [x] Advanced console UI (Spectre.Console)
+- [ ] Player lyrics and metadata display
+- [ ] Detailed video information (views, likes, etc)
+- [ ] Refactor code structure (services, separation)
+- [ ] Better error handling (expired streams, failures)
+- [ ] Playlist support
+- [ ] Audio download system
+- [ ] Search improvements (ranking, filtering)
+- [ ] Local cache system
+- [ ] Metadata enrichment (thumbnails, channel info)
+- [ ] Multi-threaded downloads
+
+## 📚 Libraries
+
+- **Spectre.Console** — rich console UI and formatting
+- **Spectre.Console.ImageSharp** — image rendering in console
+- **YouTubeExplode** — reverse engineered YouTube endpoints
+- **LibVLC** — audio playback engine
+- **LibVLCSharp** — C# bindings for LibVLC
+
 
 ## 📦 Installation
 
