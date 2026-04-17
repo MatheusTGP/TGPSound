@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-	<img src="examples/player-image.jpeg" width="60%" />
+	<img src="examples/player-image.jpeg" width="85%" />
 </p>
 
 <p align="center">
@@ -83,3 +83,14 @@ This project was built for learning purposes, focusing on:
 git clone https://github.com/MatheusTGP/TGPSound.git
 cd TGPSound
 dotnet run
+```
+
+## ⚠️ Disclaimer
+
+This project is not affiliated with, authorized, maintained, sponsored or endorsed by YouTube or Google.
+
+TGPSound is an independent educational project created for learning purposes, focusing on reverse engineering, networking and media streaming concepts.
+
+All content is provided by third-party services. This project does not host, store or distribute any media.
+
+Users are responsible for complying with applicable laws and the terms of service of the platforms they interact with.
