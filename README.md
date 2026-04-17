@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-	<img src="examples/player-image.jpeg" width="45%" />
+	<img src="examples/player-image.jpeg" width="60%" />
 </p>
 
 <p align="center">
