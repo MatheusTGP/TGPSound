@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="TGPSound.Tests/TGPSound.Tests.csproj" />
+  <Project Path="TGPSound/TGPSound.csproj" />
+</Solution>
