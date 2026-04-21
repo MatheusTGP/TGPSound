@@ -19,7 +19,7 @@ public static class APIsServices
         await Http.Client.GetFromJsonAsync<List<AudioItem>>($"https://lyrics.paxsenix.org/youtube/search?q={Uri.EscapeDataString(query)}");
 
     // Speed Search!
-    public static async Task<List<PipedSearchResult>?> PipedYouTubeSearch(string query) =>
-        await Http.Client.GetFromJsonAsync<List<PipedSearchResult>>($"https://api.piped.private.coffee/search?q={Uri.EscapeDataString(query)}&filter=musics_songs");
+    public static async Task<PipedSearchResult?> PipedYouTubeSearch(string query) =>
+        await Http.Client.GetFromJsonAsync<PipedSearchResult?>($"https://api.piped.private.coffee/search?q={Uri.EscapeDataString(query)}&filter=music_songs");
 
 }
