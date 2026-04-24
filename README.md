@@ -1,4 +1,4 @@
-<h1 align="center">🎶 TGPSound</h1>
+<h1 align="center">🎶 TGPSound: Console YouTube Client</h1>
 <p align="center">A lightweight YouTube console client built with C# and .NET</i>
 
 <p align="center">
@@ -12,11 +12,12 @@
 </p>
 
 <p align="center">
-	<img src="examples/player-image.jpeg" width="85%" />
+  <img src=".assets/main-image.jpeg" width="85%" />
+	<img src=".assets/player-image.jpeg" width="85%" />
 </p>
 
 <p align="center">
-	<i>Audio player screen with thumbnail and progress bar</i>
+	<i>MainPage • Audio player screen with thumbnail and progress bar</i>
 </p>
 
 ## 🚀 About
@@ -36,6 +37,7 @@ This project was built for learning purposes, focusing on:
 ## ✨ Features
 
 - 🔍 Search musics
+- 🔍 View lyrics in player screen
 - 🎵 Extract better audio streams
 - ⚡ Fast and lightweight
 - 🧠 Reverse engineered endpoints
@@ -57,7 +59,8 @@ This project was built for learning purposes, focusing on:
 - [x] Console-based interface
 - [x] Fast and lightweight architecture
 - [x] Advanced console UI (Spectre.Console)
-- [ ] Player lyrics and metadata display
+- [x] Player lyrics and metadata display (in 24/04/2026)
+- [ ] Metadata enrichment (thumbnails, channel info)
 - [ ] Detailed video information (views, likes, etc)
 - [ ] Refactor code structure (services, separation)
 - [ ] Better error handling (expired streams, failures)
@@ -65,7 +68,6 @@ This project was built for learning purposes, focusing on:
 - [ ] Audio download system
 - [ ] Search improvements (ranking, filtering)
 - [ ] Local cache system
-- [ ] Metadata enrichment (thumbnails, channel info)
 - [ ] Multi-threaded downloads
 
 ## 📚 Libraries
@@ -75,7 +77,6 @@ This project was built for learning purposes, focusing on:
 - **YouTubeExplode** — reverse engineered YouTube endpoints
 - **LibVLC** — audio playback engine
 - **LibVLCSharp** — C# bindings for LibVLC
-
 
 ## 📦 Installation
 
