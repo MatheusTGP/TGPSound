@@ -124,10 +124,9 @@ internal class PlayerUI(AppState state) : IScreen
         if (_state.CurrentMetadata.PlainLyrics == null)
         {
             var lyrics = await APIsServices.GetLrclibLyrics(_state.CurrentMetadata.Title, _state.CurrentMetadata.Artist);
-            if (lyrics != null && lyrics.Count > 0)
+            if (lyrics != null)
             {
-                // For simplicity, we just take the first result. In a real app, you might want to handle multiple results or show a loading state.
-                _state.CurrentMetadata.PlainLyrics = lyrics[0].PlainLyrics;
+                _state.CurrentMetadata.PlainLyrics = lyrics.PlainLyrics;
                 lyricsLines = _state.CurrentMetadata.PlainLyrics?.Split('\n').Length ?? 0;
             }
             else
