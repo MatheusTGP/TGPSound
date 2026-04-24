@@ -43,7 +43,7 @@ public class PlayerController(LibVLC libvlc)
 
     public void Stop()
     {
-        _player.Stop();
+        _player.Stop();        
         _player.Media = null;
     }
 

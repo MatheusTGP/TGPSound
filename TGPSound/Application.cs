@@ -28,7 +28,7 @@ public static class Application
                         }
                         else
                         {
-                            screen.HandleActions(key);
+                            await screen.HandleActions(key);
                         }
                     }
                 }
@@ -76,7 +76,7 @@ public static class Application
 public class AppState
 {
     public Screen CurrentScreen { get; set; } = Screen.Main;
-    public MetadataItem CurrentMetadata { get; set; } = new() { Title = "Nada Tocando" };
+    public MetadataItem CurrentMetadata { get; set; } = new() { Title = "Waiting play" };
     public string CurrentInput { get; set; } = "";
     public string InputBuffer { get; set; } = "";
     public bool IsTyping { get; set; } = false;

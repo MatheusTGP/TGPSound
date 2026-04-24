@@ -10,5 +10,6 @@ public class MetadataItem
     public bool IsPlaying { get; set; } = false;
     // cache/thumb.png -> or null if not loaded yet
     public string? ThumbnailPath { get; set; } = null;
+    public string? PlainLyrics { get; set; } = null;
     public string Duration { get; set; } = "";
 }
