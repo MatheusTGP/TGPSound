@@ -16,6 +16,13 @@ public class ServicesTest
     }
 
     [Fact]
+    public async Task TestPaxsenixYouTubeSearch() {
+        var result = await APIsServices.PaxsenixYouTubeSearch("bruno mars");
+        Console.WriteLine(JsonSerializer.Serialize(result!, options));
+        Assert.NotNull(result);
+    }
+
+    [Fact]
     public async Task TestDeezerSearch() {
         var result = await APIsServices.DeezerSearchTrack("bruno mars");
         Console.WriteLine(JsonSerializer.Serialize(result!.Data, options));

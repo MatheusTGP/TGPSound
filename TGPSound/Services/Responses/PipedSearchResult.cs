@@ -1,4 +1,4 @@
-﻿namespace TGPSound.Services.Models;
+﻿namespace TGPSound.Services.Responses;
 
 public class PipedSearchResult
 {

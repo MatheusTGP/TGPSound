@@ -1,9 +1,7 @@
-﻿namespace TGPSound.Models;
+﻿namespace TGPSound.Services.Responses;
 
-public class AudioItem
+public class PaxsenixSearchResult
 {
-    // Preview for Dezzer, but we can use it for other APIs if they support it.
-    public string? PreviewUrl { get; set; } = null;
     public string Duration { get; set; } = "";
     public string VideoId { get; set; } = "";
     public string Author { get; set; } = "";

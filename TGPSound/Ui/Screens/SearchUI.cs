@@ -1,8 +1,8 @@
 ﻿using Spectre.Console;
 using Spectre.Console.Rendering;
 using TGPSound.Common;
-using TGPSound.Models;
 using TGPSound.Services;
+using TGPSound.Services.Responses;
 
 namespace TGPSound.Ui.Screens;
 
@@ -13,7 +13,7 @@ internal class SearchUI(AppState state) : IScreen
     private readonly AppState _state = state;
     private readonly YouTubeService youtube = new();
 
-    private List<AudioItem>? searchResults = [];
+    private List<PaxsenixSearchResult>? searchResults = [];
     private CancellationTokenSource? _cts;
     private bool isSearching = false;
     public int selectedItemIndex = 0;

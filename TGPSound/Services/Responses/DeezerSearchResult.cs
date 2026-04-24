@@ -1,14 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TGPSound.Services.Models;
+namespace TGPSound.Services.Responses;
 
-public class Root
+public class DeezerSearchResult
 {
     [JsonPropertyName("data")]
-    public List<Track> Data { get; set; } = [];
+    public List<DeezerTrack> Data { get; set; } = [];
 }
 
-public class Track
+public class DeezerTrack
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }
@@ -53,16 +53,16 @@ public class Track
     public string Md5Image { get; set; } = string.Empty;
 
     [JsonPropertyName("artist")]
-    public Artist Artist { get; set; } = new();
+    public DeezerArtist Artist { get; set; } = new();
 
     [JsonPropertyName("album")]
-    public Album Album { get; set; } = new();
+    public DeezerAlbum Album { get; set; } = new();
 
     [JsonPropertyName("type")]
     public string Type { get; set; } = string.Empty;
 }
 
-public class Artist
+public class DeezerArtist
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }
@@ -95,7 +95,7 @@ public class Artist
     public string Type { get; set; } = string.Empty;
 }
 
-public class Album
+public class DeezerAlbum
 {
     [JsonPropertyName("id")]
     public long Id { get; set; }
