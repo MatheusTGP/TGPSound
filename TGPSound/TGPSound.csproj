@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="LibVLCSharp" Version="3.9.7.1" />
 	<PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.23.1" />
-	<PackageReference Include="YoutubeExplode" Version="6.5.7" />
+	<PackageReference Include="YoutubeExplode" Version="6.6.0" />
     <PackageReference Include="Spectre.Console" Version="0.55.2" />
     <PackageReference Include="Spectre.Console.ImageSharp" Version="0.55.2" />   
   </ItemGroup>
