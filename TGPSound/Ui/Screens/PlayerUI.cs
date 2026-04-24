@@ -53,8 +53,10 @@ internal class PlayerUI(AppState state) : IScreen
 
     private Align RenderLyricsOrThumb()
     {
-        if (!showLyrics) return RenderThumbnail();
-        if (_state.CurrentMetadata.PlainLyrics == null) return Align.Center(new Markup("Searching lyrics"));
+        if (!showLyrics || _state.CurrentMetadata.PlainLyrics == null)
+        {
+            return RenderThumbnail();
+        }
         
         return Align.Center(
             new Markup($"[bold white]{
@@ -123,15 +125,22 @@ internal class PlayerUI(AppState state) : IScreen
     {
         if (_state.CurrentMetadata.PlainLyrics == null)
         {
-            var lyrics = await APIsServices.GetLrclibLyrics(_state.CurrentMetadata.Title, _state.CurrentMetadata.Artist);
-            if (lyrics != null)
+            try
             {
-                _state.CurrentMetadata.PlainLyrics = lyrics.PlainLyrics;
-                lyricsLines = _state.CurrentMetadata.PlainLyrics?.Split('\n').Length ?? 0;
+                var lyrics = await APIsServices.GetLrclibLyrics(_state.CurrentMetadata.Title, _state.CurrentMetadata.Artist);
+                if (lyrics != null)
+                {
+                    _state.SetPlainLyrics(lyrics.PlainLyrics);
+                    lyricsLines = _state.CurrentMetadata.PlainLyrics?.Split('\n').Length ?? 0;
+                }
+                else
+                {
+                    _state.SetPlainLyrics("No lyrics found!");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _state.CurrentMetadata.PlainLyrics = "No lyrics found!";
+                _state.SetPlainLyrics($"Error fetching lyrics:\n{ex.Message}");
             }
         }
     }

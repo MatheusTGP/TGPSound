@@ -21,6 +21,11 @@ namespace TGPSound.Common
             state.CurrentMetadata.Url = url;
         }
 
+        public static void SetPlainLyrics(this AppState state, string? plainLyrics)
+        {
+            state.CurrentMetadata.PlainLyrics = plainLyrics;
+        }
+
         public static void NavigateTo(this AppState state, Screen screen)
         {
             state.CurrentScreen = screen;

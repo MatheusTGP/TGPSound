@@ -11,5 +11,5 @@ public class MetadataItem
     // cache/thumb.png -> or null if not loaded yet
     public string? ThumbnailPath { get; set; } = null;
     public string? PlainLyrics { get; set; } = null;
-    public string Duration { get; set; } = "";
+    public string Duration { get; set; } = "";   
 }
