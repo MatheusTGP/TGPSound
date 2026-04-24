@@ -1,8 +1,5 @@
-﻿using System.Net.Http.Headers;
-using TGPSound.Common;
-using YoutubeExplode;
+﻿using YoutubeExplode;
 using YoutubeExplode.Common;
-using YoutubeExplode.Exceptions;
 using YoutubeExplode.Search;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;

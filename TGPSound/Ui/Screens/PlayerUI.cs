@@ -96,7 +96,7 @@ internal class PlayerUI(AppState state) : IScreen
         );
     }
 
-    public void HandleActions(ConsoleKey key)
+    public async Task HandleActions(ConsoleKey key)
     {
         switch (key)
         {

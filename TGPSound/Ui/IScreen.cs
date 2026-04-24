@@ -5,5 +5,5 @@ namespace TGPSound.Ui;
 public interface IScreen
 {
     IRenderable Render();
-    void HandleActions(ConsoleKey key);
+    async Task HandleActions(ConsoleKey key) { }
 }

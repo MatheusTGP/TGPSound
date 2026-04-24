@@ -3,6 +3,7 @@ using Spectre.Console.Rendering;
 using TGPSound.Common;
 using TGPSound.Services;
 using TGPSound.Services.Responses;
+using YoutubeExplode.Videos.Streams;
 
 namespace TGPSound.Ui.Screens;
 
@@ -10,6 +11,7 @@ internal class SearchUI(AppState state) : IScreen
 {
     private const int MAX_SEARCH_RESULTS = 10;
 
+    private readonly string defaultThumbPath = Path.Combine("cache", "thumb.png");
     private readonly AppState _state = state;
     private readonly YouTubeService youtube = new();
 
@@ -86,37 +88,33 @@ internal class SearchUI(AppState state) : IScreen
         return new Markup("[gray]Not found results[/]").Centered();
     }
 
-    private async Task BuildPlayerAsync()
+    private async Task BuildStreamAsync()
     {
         var video = searchResults?[selectedItemIndex];
-
-        _state.CurrentMetadata.Url = "";
-        _state.NavigateTo(Screen.Player);
-
         if (video != null)
         {
-            _state.SetMetadata(video.Title, video.Author, video.Duration);
             var metadata = await youtube.GetStream(video.VideoId);
             if (metadata != null)
             {
-                _state.CurrentMetadata.Url = metadata.GetBestAudioUrl();
+                BuildPlayerState(video, metadata.GetBestAudioUrl());
                 await LoadThumbnailAsync(video.Thumbnail);
             }
-            else
-            {
-                _state.CurrentMetadata.Title = "Fail in get streaming";
-            }
         }
-        else
-        {
-            _state.CurrentMetadata.Title = "Error from get video details";
-        }
+    }
+
+    private void BuildPlayerState(PaxsenixSearchResult video, string streamUrl)
+    {
+        _state.NavigateTo(Screen.Player);
+        _state.CurrentMetadata.Title = video.Title;
+        _state.CurrentMetadata.Artist = video.Author;
+        _state.CurrentMetadata.VideoId = video.VideoId;
+        _state.CurrentMetadata.Duration = video.Duration;
+        _state.CurrentMetadata.Url = streamUrl;
     }
 
     private async Task LoadThumbnailAsync(string imageUrl)
     {
-        var path = Path.Combine("cache", "thumb.png");
-        if (!Directory.Exists(path))
+        if (!Directory.Exists(defaultThumbPath))
         {
             Directory.CreateDirectory("cache");
         }
@@ -124,11 +122,11 @@ internal class SearchUI(AppState state) : IScreen
         var bytes = await Http.Client.GetByteArrayAsync(imageUrl);
         try
         {
-            await File.WriteAllBytesAsync(path, bytes);
+            await File.WriteAllBytesAsync(defaultThumbPath, bytes);
         }
         finally
         {
-            _state.CurrentMetadata.ThumbnailPath = path;
+            _state.CurrentMetadata.ThumbnailPath = defaultThumbPath;
         }
     }
 
@@ -150,7 +148,7 @@ internal class SearchUI(AppState state) : IScreen
             isSearching = false;
         }
     }
-    public void HandleActions(ConsoleKey key)
+    public async Task HandleActions(ConsoleKey key)
     {
         switch (key)
         {
@@ -159,11 +157,11 @@ internal class SearchUI(AppState state) : IScreen
                 break;
 
             case ConsoleKey.P:
-                _ = Task.Run(SearchYouTubeAsync);
+                await SearchYouTubeAsync();
                 break;
 
             case ConsoleKey.T:
-                _ = Task.Run(BuildPlayerAsync);
+                await BuildStreamAsync();
                 break;
 
             case ConsoleKey.K:

@@ -22,7 +22,7 @@ internal class MainUI(AppState state) : IScreen
         ).NoBorder();
     }
 
-    public void HandleActions(ConsoleKey key)
+    public async Task HandleActions(ConsoleKey key)
     {
         switch (key)
         {
