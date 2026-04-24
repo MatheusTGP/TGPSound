@@ -11,13 +11,19 @@
   <img src="https://img.shields.io/badge/YouTube-Client-red?style=for-the-badge&logo=youtube&logoColor=white" />
 </p>
 
-<p align="center">
-  <img src=".assets/main-image.jpeg" width="85%" />
-	<img src=".assets/player-image.jpeg" width="85%" />
-</p>
+<table>
+  <tr>
+    <td><img src=".assets/main-image.jpeg" width="85%"></td>
+    <td><img src=".assets/player-image.jpeg" width="85%"></td>
+  </tr>
+  <tr>
+    <td><img src=".assets/player-2-image.jpeg" width="85%"></td>
+    <td><img src=".assets/lyrics-image.jpeg" width="85%"></td>
+  </tr>
+</table>
 
 <p align="center">
-	<i>MainPage • Audio player screen with thumbnail and progress bar</i>
+	<i>MainPage • Audio player • Lyrics View</i>
 </p>
 
 ## 🚀 About
