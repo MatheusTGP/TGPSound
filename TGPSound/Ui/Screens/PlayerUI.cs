@@ -7,17 +7,33 @@ using TGPSound.Services;
 
 namespace TGPSound.Ui.Screens;
 
-internal class PlayerUI(AppState state) : IScreen
+internal class PlayerUI : IScreen
 {
-    private readonly PlayerController playerController = new(new LibVLC("--no-video", "--quiet"));
-    private readonly AppState _state = state;
+    private readonly AppState _state;
     private bool showLyrics = false;
+    private bool playerReady = false;
     private int thumbnailSize = 15;
 
+    private PlayerController? playerController = null;
     private readonly int lyricsWindowSize = 20;
     private int lyricsIndex = 0;
     private int lyricsLines = 0;
-    
+
+    public PlayerUI(AppState state)
+    {
+        _state = state;
+        _ = InitVlcAsync();
+    }
+
+    public async Task InitVlcAsync()
+    {
+        await Task.Run(() => {
+            Core.Initialize();
+            playerController = new PlayerController(new LibVLC("--no-video", "--quiet"));
+            playerReady = true;
+        });
+    }
+
     public IRenderable Render()
     {
         return new Panel(
@@ -87,7 +103,7 @@ internal class PlayerUI(AppState state) : IScreen
         int width = 50;
 
         var duration = ParseDuration(_state.CurrentMetadata.Duration);
-        var current = TimeSpan.FromSeconds(playerController.GetCurrentTime());
+        var current = TimeSpan.FromSeconds(playerController?.GetCurrentTime() ?? 0);
         if (duration > TimeSpan.Zero && current > duration)
             current = duration;
 
@@ -151,7 +167,7 @@ internal class PlayerUI(AppState state) : IScreen
         {
             case ConsoleKey.Q:
                 {
-                    playerController.Stop();
+                    playerController?.Stop();
                     _state.CurrentMetadata.PlainLyrics = null;
                     showLyrics = false;
                     lyricsIndex = 0;
@@ -161,8 +177,8 @@ internal class PlayerUI(AppState state) : IScreen
                 ;
             case ConsoleKey.T:
                 {
-                    if (string.IsNullOrEmpty(_state.CurrentMetadata.Url)) return;
-                    playerController.SetMedia(playerController.BuildMedia(_state.CurrentMetadata.Url));
+                    if (string.IsNullOrEmpty(_state.CurrentMetadata.Url) || !playerReady) return;
+                    playerController?.SetMedia(playerController.BuildMedia(_state.CurrentMetadata.Url));
                     break;
                 }
             case ConsoleKey.L:
@@ -183,8 +199,8 @@ internal class PlayerUI(AppState state) : IScreen
                 }
             case ConsoleKey.Spacebar:
                 {
-                    playerController.PlayPause();
-                    _state.CurrentMetadata.IsPlaying = playerController.IsPlaying();
+                    playerController?.PlayPause();
+                    _state.CurrentMetadata.IsPlaying = playerController?.IsPlaying() ?? false;
                     break;
                 }
             case ConsoleKey.UpArrow:
@@ -202,8 +218,8 @@ internal class PlayerUI(AppState state) : IScreen
                     );
                     break;
                 }
-            case ConsoleKey.D: playerController.Forward(); break;
-            case ConsoleKey.A: playerController.Backward(); break;
+            case ConsoleKey.D: playerController?.Forward(); break;
+            case ConsoleKey.A: playerController?.Backward(); break;
         }
     }
 

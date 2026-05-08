@@ -5,6 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <StartupObject>TGPSound.Application</StartupObject>
+	<PublishSingleFile>true</PublishSingleFile>
+	<SelfContained>true</SelfContained>
+	<UseAppHost>true</UseAppHost>
   </PropertyGroup>
 
   <ItemGroup>
