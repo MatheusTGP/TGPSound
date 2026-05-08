@@ -10,12 +10,11 @@ internal class SearchUI(AppState state) : IScreen
 {
     private const int MAX_SEARCH_RESULTS = 10;
 
-    private readonly string defaultThumbPath = Path.Combine("cache", "thumb.png");
-    private readonly AppState _state = state;
+    private readonly string DEFAULT_THUMB_PATH = Path.Combine("cache", "thumb.png");
+    private readonly AppState appState = state;
     private readonly YouTubeService youtube = new();
 
     private List<PaxsenixSearchResult>? searchResults = [];
-    private CancellationTokenSource? _cts;
     private bool isSearching = false;
     public int selectedItemIndex = 0;
 
@@ -39,15 +38,15 @@ internal class SearchUI(AppState state) : IScreen
                     .AddColumn(new GridColumn().Width(50))
                     .AddRow(
                         new Panel(
-                            new Markup($"[aqua]{_state.InputBuffer}[/][grey]_[/]\n")
+                            new Markup($"[aqua]{appState.InputBuffer}[/][grey]_[/]\n")
                         )
                         .Header("[bold white]INPUT-BOX[/]")
                         .Border(BoxBorder.Rounded)
                         .Expand(),
                         new Panel(
                             new Rows(
-                                new Markup($"isTyping: [green]{_state.IsTyping}[/]"),
-                                new Markup($"Selected: [aqua]{_state.CurrentInput}[/]")
+                                new Markup($"isTyping: [green]{appState.IsTyping}[/]"),
+                                new Markup($"Selected: [aqua]{appState.CurrentInput}[/]")
                             )
                         )
                         .Header("[bold white]STATES[/]")
@@ -62,7 +61,7 @@ internal class SearchUI(AppState state) : IScreen
     {
         if (isSearching)
         {
-            return new Markup($"[white]Searching for[/][bold blue] {_state.CurrentInput}[/]").Centered();
+            return new Markup($"[white]Searching for[/][bold blue] {appState.CurrentInput}[/]").Centered();
         }
         if (searchResults != null)
         {
@@ -94,58 +93,40 @@ internal class SearchUI(AppState state) : IScreen
         var video = searchResults?[selectedItemIndex];
         if (video != null)
         {
+            // Navigate to player screen before fetching metadata to show loading state
+            appState.NavigateTo(Screen.Player);
             var metadata = await youtube.GetStream(video.VideoId);
             if (metadata != null)
             {
-                BuildPlayerState(video, metadata.GetBestAudioUrl());
-                await LoadThumbnailAsync(video.Thumbnail);
+                appState.PlayerMetadata.Update(
+                    title: video.Title,
+                    artist: video.Author,
+                    duration: video.Duration,
+                    url: metadata.GetBestAudioUrl()
+                );
+                // Cache thumbnail to avoid re-downloading it in the player screen
+                if (!Directory.Exists(DEFAULT_THUMB_PATH)) Directory.CreateDirectory("cache");
+                var bytes = await Http.Client.GetByteArrayAsync(video.Thumbnail);
+
+                try {
+                    _ = File.WriteAllBytesAsync(DEFAULT_THUMB_PATH, bytes);
+                }
+                finally {
+                    appState.PlayerMetadata.SetThumbnail(DEFAULT_THUMB_PATH);
+                }
             }
-        }
-    }
-
-    private void BuildPlayerState(PaxsenixSearchResult video, string streamUrl)
-    {
-        _state.NavigateTo(Screen.Player);
-        _state.CurrentMetadata.Title = video.Title;
-        _state.CurrentMetadata.Artist = video.Author;
-        _state.CurrentMetadata.VideoId = video.VideoId;
-        _state.CurrentMetadata.Duration = video.Duration;
-        _state.CurrentMetadata.Url = streamUrl;
-    }
-
-    private async Task LoadThumbnailAsync(string imageUrl)
-    {
-        if (!Directory.Exists(defaultThumbPath))
-        {
-            Directory.CreateDirectory("cache");
-        }
-
-        var bytes = await Http.Client.GetByteArrayAsync(imageUrl);
-        try
-        {
-            await File.WriteAllBytesAsync(defaultThumbPath, bytes);
-        }
-        finally
-        {
-            _state.CurrentMetadata.ThumbnailPath = defaultThumbPath;
         }
     }
 
     private async Task SearchYouTubeAsync()
     {
-        _cts?.Cancel();
-        _cts = new CancellationTokenSource();
-        var token = _cts.Token;
-
         isSearching = true;
-        try
-        {
-            var result = await APIsServices.PaxsenixYouTubeSearch(_state.CurrentInput);
-            if (token.IsCancellationRequested && result == null) return;
+        try {
+            var result = await APIsServices.PaxsenixYouTubeSearch(appState.CurrentInput);
+            if (result == null) return;
             searchResults = result;
         }
-        finally
-        {
+        finally{
             isSearching = false;
         }
     }
@@ -154,32 +135,32 @@ internal class SearchUI(AppState state) : IScreen
         switch (key)
         {
             case ConsoleKey.Q:
-                _state.CurrentScreen = Screen.Main;
+                appState.CurrentScreen = Screen.Main;
                 break;
 
             case ConsoleKey.V:
                 var clipboardText = WinClipboardHelper.GetClipboardString();
                 // Avoid pasting too long text or null
                 if (clipboardText == null || clipboardText.Length > 512) return;
-                _state.CurrentInput = clipboardText;
+                appState.CurrentInput = clipboardText;
                 break;
 
             case ConsoleKey.C:
-                _state.CurrentInput = "";
+                appState.CurrentInput = "";
                 break;
 
             case ConsoleKey.P:
-                if (_state.CurrentInput.Length == 0) return;
-                await SearchYouTubeAsync();
+                if (appState.CurrentInput.Length == 0) return;
+                _ = SearchYouTubeAsync();
                 break;
 
             case ConsoleKey.T:
-                await BuildStreamAsync();
+                _ = BuildStreamAsync();
                 break;
 
             case ConsoleKey.K:
-                _state.IsTyping = true;
-                _state.InputBuffer = "";
+                appState.IsTyping = true;
+                appState.InputBuffer = "";
                 break;
 
             case ConsoleKey.UpArrow:

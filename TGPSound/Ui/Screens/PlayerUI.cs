@@ -41,13 +41,13 @@ internal class PlayerUI : IScreen
                 new Markup(new string('\n', 2)),
                 RenderLyricsOrThumb(),
                 new Markup("\n"),
-                new Markup($"[bold aqua]{_state.CurrentMetadata.Title}[/]").Centered(),
-                new Markup($"[gray]{_state.CurrentMetadata.Artist}[/]\n").Centered(),
+                new Markup($"[bold aqua]{_state.PlayerMetadata.Title}[/]").Centered(),
+                new Markup($"[gray]{_state.PlayerMetadata.Artist}[/]\n").Centered(),
                 RenderProgressBar(),
                 new Columns(
                     new Markup($"(A)[aqua] - 5 [/]").Centered(),
                     new Markup(
-                    _state.CurrentMetadata.IsPlaying
+                    _state.PlayerMetadata.IsPlaying
                         ? "[red] ██[/]"
                         : "[bold aqua]█ █[/]"
                     ).Centered(),
@@ -58,7 +58,7 @@ internal class PlayerUI : IScreen
                     new Markup($"[grey](L)[/] {(showLyrics ? "Hide" : "Show")} Lyrics"),
                     new Markup("[grey](E)[/] Decrease art size").Centered(),
                     new Markup("[grey](R)[/] Increase art size").Centered(),
-                    new Markup("[grey](F)[/] Queue").RightJustified()
+                    new Markup($"isReady: {playerReady}").RightJustified()
                 ).Expand()
             )
         )
@@ -69,7 +69,7 @@ internal class PlayerUI : IScreen
 
     private Align RenderLyricsOrThumb()
     {
-        if (!showLyrics || _state.CurrentMetadata.PlainLyrics == null)
+        if (!showLyrics || _state.PlayerMetadata.PlainLyrics == null)
         {
             return RenderThumbnail();
         }
@@ -77,7 +77,7 @@ internal class PlayerUI : IScreen
         return Align.Center(
             new Markup($"[bold white]{
                 LyricsHelper.GetLyricView(
-                    _state.CurrentMetadata.PlainLyrics,
+                    _state.PlayerMetadata.PlainLyrics,
                     lyricsIndex,
                     lyricsWindowSize
                 )
@@ -87,12 +87,12 @@ internal class PlayerUI : IScreen
 
     private Align RenderThumbnail()
     {
-        if (_state.CurrentMetadata.ThumbnailPath == null)
+        if (_state.PlayerMetadata.ThumbnailPath == null)
         {
             return Align.Center(new Markup("Loading artwork..."));
         }
         return Align.Center(
-            new CanvasImage(_state.CurrentMetadata.ThumbnailPath)
+            new CanvasImage(_state.PlayerMetadata.ThumbnailPath)
                 .MaxWidth(thumbnailSize)
                 .BilinearResampler()
         );
@@ -102,7 +102,7 @@ internal class PlayerUI : IScreen
     {
         int width = 50;
 
-        var duration = ParseDuration(_state.CurrentMetadata.Duration);
+        var duration = ParseDuration(_state.PlayerMetadata.Duration);
         var current = TimeSpan.FromSeconds(playerController?.GetCurrentTime() ?? 0);
         if (duration > TimeSpan.Zero && current > duration)
             current = duration;
@@ -126,7 +126,7 @@ internal class PlayerUI : IScreen
 
         var bar = sb.ToString();
         string durationText = duration.TotalSeconds > 0
-            ? _state.CurrentMetadata.Duration
+            ? _state.PlayerMetadata.Duration
             : "--:--";
 
         return new Rows(
@@ -139,15 +139,17 @@ internal class PlayerUI : IScreen
 
     private async Task SearchLyricsAsync()
     {
-        if (_state.CurrentMetadata.PlainLyrics == null)
+        if (_state.PlayerMetadata.PlainLyrics == null)
         {
+            showLyrics = true;
+            _state.SetPlainLyrics("Searching lyrics...");
             try
             {
-                var lyrics = await APIsServices.GetLrclibLyrics(_state.CurrentMetadata.Title, _state.CurrentMetadata.Artist);
+                var lyrics = await APIsServices.GetLrclibLyrics(_state.PlayerMetadata.Title, _state.PlayerMetadata.Artist);
                 if (lyrics != null)
                 {
                     _state.SetPlainLyrics(lyrics.PlainLyrics);
-                    lyricsLines = _state.CurrentMetadata.PlainLyrics?.Split('\n').Length ?? 0;
+                    lyricsLines = _state.PlayerMetadata.PlainLyrics?.Split('\n').Length ?? 0;
                 }
                 else
                 {
@@ -168,7 +170,7 @@ internal class PlayerUI : IScreen
             case ConsoleKey.Q:
                 {
                     playerController?.Stop();
-                    _state.CurrentMetadata.PlainLyrics = null;
+                    _state.PlayerMetadata.SetLyrics(null);
                     showLyrics = false;
                     lyricsIndex = 0;
                     _state.NavigateTo(Screen.Search);
@@ -177,14 +179,14 @@ internal class PlayerUI : IScreen
                 ;
             case ConsoleKey.T:
                 {
-                    if (string.IsNullOrEmpty(_state.CurrentMetadata.Url) || !playerReady) return;
-                    playerController?.SetMedia(playerController.BuildMedia(_state.CurrentMetadata.Url));
+                    if (string.IsNullOrEmpty(_state.PlayerMetadata.Url) || !playerReady) return;
+                    playerController?.SetMedia(playerController.BuildMedia(_state.PlayerMetadata.Url));
                     break;
                 }
             case ConsoleKey.L:
                 {
                     showLyrics = !showLyrics;
-                    await SearchLyricsAsync();
+                    _ = SearchLyricsAsync();
                     break;
                 }
             case ConsoleKey.E:
@@ -200,7 +202,7 @@ internal class PlayerUI : IScreen
             case ConsoleKey.Spacebar:
                 {
                     playerController?.PlayPause();
-                    _state.CurrentMetadata.IsPlaying = playerController?.IsPlaying() ?? false;
+                    _state.PlayerMetadata.IsPlaying = playerController?.IsPlaying() ?? false;
                     break;
                 }
             case ConsoleKey.UpArrow:

@@ -2,7 +2,10 @@
 
 namespace TGPSound.Common;
 
-// For windows only, call native apis.
+/// <summary>
+/// Helper class to interact with the Windows clipboard using P/Invoke.
+/// This allows us to get the clipboard content without relying on WPF or WinForms, which can be useful in a console application.
+/// </summary>
 internal class WinClipboardHelper
 {
     const uint CF_UNICODETEXT = 13;
