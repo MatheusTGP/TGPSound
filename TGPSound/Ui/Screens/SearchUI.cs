@@ -3,7 +3,6 @@ using Spectre.Console.Rendering;
 using TGPSound.Common;
 using TGPSound.Services;
 using TGPSound.Services.Responses;
-using YoutubeExplode.Videos.Streams;
 
 namespace TGPSound.Ui.Screens;
 
@@ -27,9 +26,11 @@ internal class SearchUI(AppState state) : IScreen
                 new FigletText("Search") { Color = Color.Aqua }.Centered(),
                 new Markup("[AQUA]Search musics from YouTube and listen![/]").Centered(),
                 new Rows(
-                    new Markup("[blue]K[/] = Toggle Keyboard"),
                     new Markup("[blue]P[/] = Search"),
-                    new Markup("[blue]T[/] = PlayerScreen"),
+                    new Markup("[blue]K[/] = Toggle Keyboard"),
+                    new Markup("[blue]V[/] = Clipboard Paste"),
+                    new Markup("[blue]C[/] = Clear current selected input"),
+                    new Markup("[blue]T[/] = Play selected item"),
                     new Markup("[blue]ENTER[/] = Save search")
                 ),
                 new Markup("\n"),
@@ -156,7 +157,19 @@ internal class SearchUI(AppState state) : IScreen
                 _state.CurrentScreen = Screen.Main;
                 break;
 
+            case ConsoleKey.V:
+                var clipboardText = WinClipboardHelper.GetClipboardString();
+                // Avoid pasting too long text or null
+                if (clipboardText == null || clipboardText.Length > 512) return;
+                _state.CurrentInput = clipboardText;
+                break;
+
+            case ConsoleKey.C:
+                _state.CurrentInput = "";
+                break;
+
             case ConsoleKey.P:
+                if (_state.CurrentInput.Length == 0) return;
                 await SearchYouTubeAsync();
                 break;
 

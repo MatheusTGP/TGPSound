@@ -7,7 +7,7 @@ namespace TGPSound;
 public static class Application
 {
     public static async Task Main()
-    {
+    {        
         var state = new AppState();
         var manager = new ScreenManager(state);
 
